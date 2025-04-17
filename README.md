@@ -8,6 +8,7 @@ https://jwt.io/ -- Use the debugger to review token contents
 #### Whats needed?  
 HashiCorp Vault 1.1x.x  
 Python 3.x.x  
+jq (CLI JSON processor)  
 Clone of this repository  
   
 #### Tiny JWT Token Issuer  
