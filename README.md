@@ -12,7 +12,7 @@ jq (CLI JSON processor)
 Clone of this repository  
   
 #### Tiny JWT Token Issuer  
-Configure Flask App to generate JWT Tokens using asymmetric keys  
+Configure Flask App to generate JWT Tokens using certificates  
   
 **Required directory structure with example keys**  
 ```
@@ -28,7 +28,7 @@ Configure Flask App to generate JWT Tokens using asymmetric keys
 **Install Required Python Modules**  
 `python -m pip install -r requirements.txt`  
   
-**Create Asymmetric Keys in 'keys' directory**  
+**Create Certificates in 'keys' directory**  
 `cd keys` or add keys/ before the key references  
 Change "username" to something else...  
 ```
