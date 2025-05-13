@@ -7,7 +7,7 @@ ___  ____  _____   ____  _____ ____ _ __ _____
         P  R  o  G  R  A  M  M  i  N  G
 <========================================[KCS]=>
   Developer: Ken C. Soukup
-  Project  : Tiny JWT Token Issuer
+  Project  : Tiny JWT Token Issuer (Flask)
   Purpose  : A very small Flask app that issues JWT Tokens with Asymmetric keys
 <=================================[04/15/2025]=>
 """
