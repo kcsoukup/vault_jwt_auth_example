@@ -29,12 +29,12 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 BASENAME = os.path.basename(__file__)
 KEY_PATH = os.path.join(os.getcwd(), 'keys')
 AUDIENCE = 'damage_inc'
-DEBUG = False
+ECHO = False
 
 
 def main() -> None:
     """ Main program where all of the primary calls are made. """
-    if DEBUG:
+    if ECHO:
         print (f'\n {__project__} v{__version__}')
         print (f' {__company__}')
         print (f' Crafted by {__author__} ({__minted__})\n')
@@ -48,7 +48,7 @@ def main() -> None:
         return
     username = sys.argv[1]
 
-    if DEBUG:
+    if ECHO:
         print( '[+] -=- Runtime Environment -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-')
         print(f'[+] Script Name       : {BASENAME}')
         print(f'[+] User Name         : {username}')
@@ -57,12 +57,12 @@ def main() -> None:
         print(f'[+] Checking for "{username}" keys...')
 
     if not os.path.exists(os.path.join(KEY_PATH, f'{username}.priv')) or not os.path.exists(os.path.join(KEY_PATH, f'{username}.pem')):
-        if DEBUG:
+        if ECHO:
             print(f'[-] WARNING! Could not locate {username} to create JWT token.')
             print(f'[+] Generating new keys for {username}...')
         generate_rsa_key_pair(username, KEY_PATH)
 
-    if DEBUG:
+    if ECHO:
         print(f'[+] Generate JWT Token for Authentication...')
     with open(os.path.join(KEY_PATH, f'{username}.priv'), 'rb') as material:
         private_key = material.read()
@@ -75,13 +75,13 @@ def main() -> None:
 
         # Encode the JWT using the private key and RS256 algorithm
         token = jwt.encode(payload, private_key, algorithm='RS256')
-        if DEBUG:
+        if ECHO:
             print(f'[+] Token: {token}')
         else:
             print(token)
 
     # Close Script
-    if DEBUG:
+    if ECHO:
         print()
         print(elapsed_time(start_time))
         print('Mission Complete!!\n')
