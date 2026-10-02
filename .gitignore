@@ -86,3 +86,7 @@ dmypy.json
 # OS files
 .DS_Store
 Thumbs.db
+
+# Local-only: RSA key pairs and session summaries (repo is public)
+keys/
+sessions/

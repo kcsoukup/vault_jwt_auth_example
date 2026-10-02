@@ -102,7 +102,7 @@ Both implementations generate tokens with:
 ### Version Control Notes
 
 - `.gitignore` is a standard Python ignore file (bytecode, virtualenvs, caches, build output, IDE/OS files).
-- `keys/` is intentionally **not** ignored: the RSA key pairs are local-only, sandboxed in Vault with zero rights, so committing them is acceptable.
+- `keys/` and `sessions/` are git-ignored: the GitHub repo is public, so RSA key pairs and session summaries stay local-only. Generate your own keys (see Setup).
 
 ## Integration Notes
 
