@@ -17,12 +17,15 @@ __author__ = 'Ken C. Soukup'
 __company__ = 'Vigorous Programming'
 __minted__ = '2025'
 
+import os
+import re
 from flask import Flask, request, jsonify
 import jwt
 from datetime import datetime, timezone, timedelta
 
 # Variables
 app = Flask(__name__)
+KEY_PATH = os.path.join(os.getcwd(), 'keys')
 
 
 @app.route('/get_token', methods=['POST'])
@@ -34,9 +37,19 @@ def get_token():
     if data:
         print(f'[+] Received data: {data}')
 
-    # Read in private key, must match id string! (no extension)
-    with open(f"./keys/{data['id']}", 'rb') as f:
-        private_key = f.read()
+    if not data or 'id' not in data or 'aud' not in data:
+        return jsonify({'error': 'id and aud are required'}), 400
+
+    # Only allow simple names (no dots or slashes) so the id can't escape the keys directory
+    if not re.fullmatch(r'[A-Za-z0-9_-]+', str(data['id'])):
+        return jsonify({'error': 'invalid id'}), 400
+
+    # Read in private key: keys/<id>.priv (same naming as the CLI)
+    try:
+        with open(os.path.join(KEY_PATH, f"{data['id']}.priv"), 'rb') as f:
+            private_key = f.read()
+    except FileNotFoundError:
+        return jsonify({'error': 'unknown id'}), 404
 
     payload = {
         'exp': datetime.now(timezone.utc) + timedelta(hours=1),

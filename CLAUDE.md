@@ -4,10 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a JWT Authentication testing project that provides two implementations for generating JWT tokens using RSA asymmetric keys:
+This is a JWT Authentication testing project that provides two implementations for generating JWT tokens using RSA asymmetric keys, plus a decoder:
 
 1. **Flask Web Service** (`jwt_issuer_flask.py`) - HTTP API for token generation
 2. **CLI Tool** (`jwt_issuer_cli.py`) - Command-line token generation with automatic key creation
+3. **Decoder** (`jwt_decoder.py`) - Decodes a token and optionally verifies it against a public key
 
 The project is designed for educational purposes to demonstrate JWT authentication with HashiCorp Vault using RS256 algorithm.
 
@@ -20,8 +21,8 @@ python -m pip install -r requirements.txt
 
 # Create RSA key pairs manually (if needed)
 cd keys
-openssl genrsa -out <username> 2048
-openssl rsa -in <username> -outform PEM -pubout -out <username>.pem
+openssl genrsa -out <username>.priv 2048
+openssl rsa -in <username>.priv -outform PEM -pubout -out <username>.pem
 ```
 
 ### Running Applications
@@ -36,6 +37,12 @@ python jwt_issuer_flask.py
 ```bash
 python jwt_issuer_cli.py <username>
 # Generates keys automatically if they don't exist
+```
+
+**JWT Decoder:**
+```bash
+python jwt_decoder.py <token>              # decode only (signature NOT verified)
+python jwt_decoder.py <token> <username>   # also verify against keys/<username>.pem
 ```
 
 ### Testing JWT Token Generation
@@ -64,12 +71,13 @@ JWT_TOKEN=$(python jwt_issuer_cli.py username)
 
 - **Flask Application** (`jwt_issuer_flask.py`): Simple web service with single `/get_token` endpoint
 - **CLI Generator** (`jwt_issuer_cli.py`): Standalone token generator with automatic key management
+- **Decoder** (`jwt_decoder.py`): Prints header/payload/times; with a username, verifies RS256 signature, expiry and audience (`damage_inc`)
 - **Keys Directory Structure**: RSA private/public key pairs stored in `keys/` directory
 
 ### Key File Naming Conventions
 
 **Flask Implementation:**
-- Private key: `keys/<username>` (no extension)
+- Private key: `keys/<username>.priv` (same as CLI; `id` must match `[A-Za-z0-9_-]+`)
 - Public key: `keys/<username>.pem`
 
 **CLI Implementation:**
@@ -90,6 +98,11 @@ Both implementations generate tokens with:
 - `PyJWT`: JWT token encoding/decoding
 - `cryptography`: RSA key operations (CLI only)
 - `rsa`: RSA operations (Flask only)
+
+### Version Control Notes
+
+- `.gitignore` is a standard Python ignore file (bytecode, virtualenvs, caches, build output, IDE/OS files).
+- `keys/` is intentionally **not** ignored: the RSA key pairs are local-only, sandboxed in Vault with zero rights, so committing them is acceptable.
 
 ## Integration Notes
 
